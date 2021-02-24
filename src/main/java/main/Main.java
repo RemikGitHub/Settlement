@@ -1,6 +1,8 @@
 package main;
 
-import person.Person;
+import calculation.DebtCounter;
+import person.Debtor;
+import person.SettlingPerson;
 import settlement.Settlement;
 
 import java.util.List;
@@ -12,9 +14,12 @@ public class Main {
         System.out.println("\n----This is Settlement program----\n");
 
         Settlement settlement = new Settlement();
-        List<Person> personList = settlement.askForSpentMoney();
+        List<SettlingPerson> settlingPersonList = settlement.askForSpentMoney();
 
-        settlement.writeDept(personList);
+        DebtCounter debtCounter = new DebtCounter(settlingPersonList);
+        List<Debtor> debtorList = debtCounter.getDebtorList();
+
+        settlement.writeDept(debtorList);
 
 
     }

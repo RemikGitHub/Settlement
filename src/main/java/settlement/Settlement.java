@@ -1,7 +1,8 @@
 package settlement;
 
-import calculation.Calculation;
-import person.Person;
+import person.Creditor;
+import person.Debtor;
+import person.SettlingPerson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,25 +14,27 @@ public class Settlement {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    public List<Person> askForSpentMoney() {
+    public List<SettlingPerson> askForSpentMoney() {
 
 
-        List<Person> personList = new ArrayList<>();
+        List<SettlingPerson> settlingPersonList = new ArrayList<>();
 
-        String continueAddingPeople;
+        int amountOfPeople;
+
+        System.out.print("How many people: ");
+        amountOfPeople = scanner.nextInt();
+        scanner.nextLine();
 
         do {
+            settlingPersonList.add(askForPerson());
+            --amountOfPeople;
 
-            personList.add(askForPerson());
-            System.out.print("Do you want to continue? Y/N: ");
-            continueAddingPeople = scanner.nextLine();
+        } while (amountOfPeople > 0);
 
-        } while (!continueAddingPeople.equalsIgnoreCase("n"));
-
-        return personList;
+        return settlingPersonList;
     }
 
-    private Person askForPerson() {
+    private SettlingPerson askForPerson() {
 
         String name;
         double spentMoney;
@@ -43,25 +46,22 @@ public class Settlement {
         spentMoney = scanner.nextDouble();
         scanner.nextLine();
 
-        return new Person(name, spentMoney);
+        return new SettlingPerson(name, spentMoney);
     }
 
-    public void writeDept(List<Person> personList) {
+    public void writeDept(List<Debtor> debtorsList) {
 
-        Calculation.countDept(personList);
+        for (Debtor debtor : debtorsList) {
 
-        for (Person person : personList) {
+            System.out.println("\nName: " + debtor.getName());
 
-            System.out.println("\nName: " + person.getName());
+            System.out.println("Must give back: ");
 
-            if (isDebtor(person)) System.out.println("Must give back: " + person.getDept());
-            else System.out.println("Must get: " + abs(person.getDept()));
-
+            for (Creditor creditor : debtor.getCreditorList()){
+                System.out.println("\t Creditor name: " + creditor.getName());
+                System.out.println("\t How much: " + creditor.getAmountOfRefund());
+            }
         }
-    }
-
-    private boolean isDebtor(Person person){
-        return person.getDept() < 0;
     }
 
 }

@@ -1,28 +1,14 @@
 package person;
 
-public class Person {
+public abstract class Person {
+
     private final String name;
-    private final double moneySpent;
-    private double dept;
 
-    public Person(String name, double moneySpent) {
+    public Person(String name) {
         this.name = name;
-        this.moneySpent = moneySpent;
-    }
-
-    public void setDept(double dept) {
-        this.dept = dept;
     }
 
     public String getName() {
         return name;
-    }
-
-    public double getMoneySpent() {
-        return moneySpent;
-    }
-
-    public double getDept() {
-        return dept;
     }
 }
