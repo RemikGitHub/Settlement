@@ -16,8 +16,8 @@ public class Main {
         Settlement settlement = new Settlement();
         List<SettlingPerson> settlingPersonList = settlement.askForSpentMoney();
 
-        DebtCounter debtCounter = new DebtCounter(settlingPersonList);
-        List<Debtor> debtorList = debtCounter.getDebtorList();
+        DebtCounter debtCounter = new DebtCounter();
+        List<Debtor> debtorList = debtCounter.getDebtorList(settlingPersonList);
 
         settlement.writeDept(debtorList);
 

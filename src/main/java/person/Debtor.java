@@ -1,47 +1,41 @@
 package person;
 
+import calculation.MoneyCalc;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Debtor extends Person {
 
-    private double amountOfDebt;
-    private List<Creditor> creditorList;
+    private final BigDecimal amountOfDebt;
+    private final List<Creditor> creditorList;
 
 
-    public Debtor(String name, double amountOfDebt) {
+    public Debtor(String name, BigDecimal amountOfDebt) {
         super(name);
-        this.amountOfDebt = amountOfDebt;
-        this.creditorList = new ArrayList<Creditor>();
+        this.amountOfDebt = MoneyCalc.round(amountOfDebt);
+        this.creditorList = new ArrayList<>();
     }
 
-    public Debtor(Debtor debtor) {
-        super(debtor.getName());
-        this.amountOfDebt = debtor.amountOfDebt;
-        this.creditorList = new ArrayList<Creditor>();
-    }
-
-    public Debtor(String name, double amountOfDebt, List<Creditor> creditorList) {
+    public Debtor(String name, BigDecimal amountOfDebt, List<Creditor> creditorList) {
         super(name);
-        this.amountOfDebt = amountOfDebt;
+        this.amountOfDebt = MoneyCalc.round(amountOfDebt);
         this.creditorList = creditorList;
     }
 
-    public void reduceDebt(double amountOfReduce) {
-        this.amountOfDebt -= amountOfReduce;
-    }
 
-    public double getAmountOfDebt() {
+    public BigDecimal getAmountOfDebt() {
         return amountOfDebt;
     }
 
     public void addCreditor(Creditor creditor){
 
-        boolean isDuplicate = false;
+        for (int i = 0; i < creditorList.size(); ++i) {
 
-        for (Creditor nextCreditor : creditorList){
-            if (nextCreditor.getName().equals(creditor.getName())) {
-                nextCreditor.raiseRefund(creditor.getAmountOfRefund());
+            if (creditorList.get(i).getName().equals(creditor.getName())) {
+                BigDecimal summaryRefund = creditorList.get(i).getAmountOfRefund().add(creditor.getAmountOfRefund());
+                creditorList.set(i, new Creditor(creditor.getName(), summaryRefund));
                 return;
             }
         }
@@ -52,4 +46,5 @@ public class Debtor extends Person {
     public List<Creditor> getCreditorList() {
         return creditorList;
     }
+
 }

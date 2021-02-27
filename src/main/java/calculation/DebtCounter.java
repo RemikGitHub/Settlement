@@ -4,89 +4,91 @@ import person.Creditor;
 import person.Debtor;
 import person.SettlingPerson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static calculation.MoneyCalc.getAverageSpend;
+
 public class DebtCounter {
 
-    private List<Creditor> creditors;
-    private List<Debtor> debtors;
-    private final double averageSpend;
+    private final List<Creditor> creditors;
+    private final List<Debtor> debtors;
 
-    public DebtCounter(List<SettlingPerson> settlingPersonList) {
 
-        this.averageSpend = getAverageSpend(settlingPersonList);
+    public DebtCounter() {
+
         this.debtors = new ArrayList<>();
         this.creditors = new ArrayList<>();
 
-        for (SettlingPerson settlingPerson : settlingPersonList) {
-            if (settlingPerson.getAmountOfSpendMoney() >= averageSpend) {
-                this.creditors.add(new Creditor(settlingPerson.getName(), settlingPerson.getAmountOfSpendMoney() - averageSpend));
-            }
-            else this.debtors.add(new Debtor(settlingPerson.getName(), averageSpend - settlingPerson.getAmountOfSpendMoney()));
-        }
-    }
-
-    public static double getAverageSpend(List<SettlingPerson> settlingPersonList){
-
-        double sumOfMoneySpent = countSpentMoney(settlingPersonList);
-        return  sumOfMoneySpent / settlingPersonList.size();
-
-    }
-
-    public static double countSpentMoney(List<SettlingPerson> settlingPersonList) {
-
-        double sumOfMoneySpent = 0.0;
-
-        for (SettlingPerson settlingPerson : settlingPersonList) {
-            sumOfMoneySpent += settlingPerson.getAmountOfSpendMoney();
-        }
-
-        return  sumOfMoneySpent;
-
     }
 
 
-    public List<Debtor> getDebtorList(){
+    public List<Debtor> getDebtorList(List<SettlingPerson> settlingPersonList) {
+
+        splitIntoCreditorsAndDebtors(settlingPersonList);
 
         int debtorsNumber = 0;
+        int creditorsNumber = 0;
 
-        Creditor creditor = creditors.get(0);
+        Creditor creditor;
+        Debtor debtor;
 
-        while ( debtorsNumber < debtors.size() ) {
+        BigDecimal currentDebt;
+        BigDecimal valueOfReduceDebt = BigDecimal.valueOf(0.0);
 
-            if( !creditors.isEmpty() ) {
-                creditor = creditors.get(0);
-            }
+        BigDecimal currentRefund;
+        BigDecimal valueOfReduceRefund = BigDecimal.valueOf(0.0);
 
+        while (debtorsNumber < debtors.size() && creditorsNumber < creditors.size()) {
 
-            if (debtors.get(debtorsNumber).getAmountOfDebt() > creditor.getAmountOfRefund()){
+            debtor = debtors.get(debtorsNumber);
+            creditor = creditors.get(creditorsNumber);
 
-                debtors.get(debtorsNumber).reduceDebt( creditor.getAmountOfRefund() );
-                debtors.get(debtorsNumber).addCreditor(creditors.get(0));
+            currentDebt = debtor.getAmountOfDebt().subtract(valueOfReduceDebt);
+            currentRefund = creditor.getAmountOfRefund().subtract(valueOfReduceRefund);
 
-                creditors.remove(0);
+            if (currentDebt.compareTo(currentRefund) >= 0) {
+
+                debtor.addCreditor(new Creditor(creditor.getName(), currentRefund));
+                valueOfReduceDebt = valueOfReduceDebt.add(currentRefund);
+
+                ++creditorsNumber;
+                valueOfReduceRefund = BigDecimal.valueOf(0.0);
 
             } else {
 
-                double splitDebt = debtors.get(debtorsNumber).getAmountOfDebt();
-
-                debtors.get(debtorsNumber).reduceDebt( splitDebt );
-                debtors.get(debtorsNumber).addCreditor(new Creditor( creditor.getName(), splitDebt ));
-                System.out.println("----1----");
-                System.out.println(debtorsNumber);
-                if (creditors.size()!=0)creditors.get(0).reduceRefund(splitDebt);
+                debtor.addCreditor(new Creditor(creditor.getName(), currentDebt));
+                valueOfReduceRefund = valueOfReduceRefund.add(currentDebt);
 
                 ++debtorsNumber;
+                valueOfReduceDebt = BigDecimal.valueOf(0.0);
             }
         }
 
         return debtors;
     }
 
+    private void splitIntoCreditorsAndDebtors(List<SettlingPerson> settlingPersonList) {
 
+        BigDecimal averageSpend = getAverageSpend(settlingPersonList);
 
+        for (SettlingPerson settlingPerson : settlingPersonList) {
 
+            if (settlingPerson.getAmountOfSpendMoney().compareTo(averageSpend) >= 0) {
 
+                BigDecimal refund = settlingPerson.getAmountOfSpendMoney().subtract(averageSpend);
+
+                this.creditors.add(new Creditor(settlingPerson.getName(), refund));
+
+            } else {
+
+                BigDecimal debt = averageSpend.subtract(settlingPerson.getAmountOfSpendMoney());
+
+                this.debtors.add(new Debtor(settlingPerson.getName(), debt));
+
+            }
+        }
+    }
 
 }

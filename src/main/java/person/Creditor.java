@@ -1,22 +1,19 @@
 package person;
 
-public class Creditor extends Person{
-    private double amountOfRefund;
+import calculation.MoneyCalc;
 
-    public Creditor(String name, double amountOfRefund) {
+import java.math.BigDecimal;
+
+public class Creditor extends Person{
+    private final BigDecimal amountOfRefund;
+
+    public Creditor(String name, BigDecimal amountOfRefund) {
         super(name);
-        this.amountOfRefund = amountOfRefund;
+        this.amountOfRefund = MoneyCalc.round(amountOfRefund);
     }
 
-    public double getAmountOfRefund() {
+    public BigDecimal getAmountOfRefund() {
         return amountOfRefund;
     }
 
-    public void reduceRefund(double amountOfReduce) {
-        this.amountOfRefund -= amountOfReduce;
-    }
-
-    public void raiseRefund(double amountOfRefund) {
-        this.amountOfRefund += amountOfRefund;
-    }
 }

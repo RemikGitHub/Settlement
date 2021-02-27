@@ -1,15 +1,19 @@
 package person;
 
+import calculation.MoneyCalc;
+
+import java.math.BigDecimal;
+
 public class SettlingPerson extends Person {
 
-    private final double amountOfSpendMoney;
+    private final BigDecimal amountOfSpendMoney;
 
-    public SettlingPerson(String name, double amountOfSpendMoney) {
+    public SettlingPerson(String name, BigDecimal amountOfSpendMoney) {
         super(name);
-        this.amountOfSpendMoney = amountOfSpendMoney;
+        this.amountOfSpendMoney = MoneyCalc.round(amountOfSpendMoney);
     }
 
-    public double getAmountOfSpendMoney() {
+    public BigDecimal getAmountOfSpendMoney() {
         return amountOfSpendMoney;
     }
 

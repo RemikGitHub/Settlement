@@ -4,11 +4,11 @@ import person.Creditor;
 import person.Debtor;
 import person.SettlingPerson;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static java.lang.Math.abs;
 
 public class Settlement {
 
@@ -37,13 +37,13 @@ public class Settlement {
     private SettlingPerson askForPerson() {
 
         String name;
-        double spentMoney;
+        BigDecimal spentMoney;
 
         System.out.print("\nWrite name: ");
         name = scanner.nextLine();
 
         System.out.print("Write down the money spent: ");
-        spentMoney = scanner.nextDouble();
+        spentMoney = BigDecimal.valueOf(scanner.nextDouble());
         scanner.nextLine();
 
         return new SettlingPerson(name, spentMoney);
