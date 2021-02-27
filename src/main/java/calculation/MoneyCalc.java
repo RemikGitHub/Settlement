@@ -12,12 +12,12 @@ public class MoneyCalc {
         return money.setScale(2, RoundingMode.HALF_EVEN);
     }
 
-    public static BigDecimal getAverageSpend(List<SettlingPerson> settlingPersonList){
+    public static BigDecimal getAverageSpend(List<SettlingPerson> settlingPersonList) {
 
         BigDecimal sumOfMoneySpent = countSpentMoney(settlingPersonList);
         BigDecimal amountOfPeople = BigDecimal.valueOf(settlingPersonList.size());
 
-        return  round(sumOfMoneySpent.divide(amountOfPeople,3,RoundingMode.HALF_UP) );
+        return round(sumOfMoneySpent.divide(amountOfPeople, 3, RoundingMode.HALF_UP));
     }
 
     public static BigDecimal countSpentMoney(List<SettlingPerson> settlingPersonList) {
@@ -28,7 +28,7 @@ public class MoneyCalc {
             sumOfMoneySpent = sumOfMoneySpent.add(settlingPerson.getAmountOfSpendMoney());
         }
 
-        return  sumOfMoneySpent;
+        return sumOfMoneySpent;
     }
 
 }

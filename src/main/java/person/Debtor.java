@@ -29,7 +29,7 @@ public class Debtor extends Person {
         return amountOfDebt;
     }
 
-    public void addCreditor(Creditor creditor){
+    public void addCreditor(Creditor creditor) {
 
         for (int i = 0; i < creditorList.size(); ++i) {
 

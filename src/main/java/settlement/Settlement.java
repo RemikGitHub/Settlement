@@ -22,8 +22,10 @@ public class Settlement {
         int amountOfPeople;
 
         System.out.print("How many people: ");
+
         amountOfPeople = scanner.nextInt();
         scanner.nextLine();
+
 
         do {
             settlingPersonList.add(askForPerson());
@@ -53,13 +55,14 @@ public class Settlement {
 
         for (Debtor debtor : debtorsList) {
 
+            System.out.println("--------------");
             System.out.println("\nName: " + debtor.getName());
 
-            System.out.println("Must give back: ");
+            System.out.println("Must give back: \n");
 
-            for (Creditor creditor : debtor.getCreditorList()){
+            for (Creditor creditor : debtor.getCreditorList()) {
                 System.out.println("\t Creditor name: " + creditor.getName());
-                System.out.println("\t How much: " + creditor.getAmountOfRefund());
+                System.out.println("\t How much: " + creditor.getAmountOfRefund() + "\n");
             }
         }
     }
